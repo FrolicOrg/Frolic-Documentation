@@ -2,14 +2,14 @@ import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>My Project</span>,
+  logo: <span>Frolic</span>,
   project: {
-    link: 'https://github.com/shuding/nextra-docs-template',
+    link: 'https://github.com/FrolicOrg/Frolic',
   },
   chat: {
-    link: 'https://discord.com',
+    link: 'https://discord.gg/NA9nkZaQnv',
   },
-  docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
+  docsRepositoryBase: 'https://github.com/FrolicOrg/Frolic',
   footer: {
     text: 'Nextra Docs Template',
   },
