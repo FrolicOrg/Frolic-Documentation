@@ -1,0 +1,153 @@
+## Base URL
+```
+http://localhost:8080
+```
+
+## Endpoint: POST /api
+This endpoint is used to retrieve data based on specified metrics, dimensions, and filters.
+
+### Request Body Structure
+```json
+{
+    "metrics": [
+        {
+            "field": "orders.total",
+            "aggregate_operator": "sum",
+        }
+    ],
+    "dimensions": [
+        {
+            "field": "products.category"
+        },
+        {
+            "field": "orders.created_at",
+            "transformations": "month"
+        }
+    ],
+    "filters": [
+        {
+            "dimension": {
+                "field": "users.state"
+            },
+            "filter_operator": "=",
+            "filter_value": "MN"
+        },
+        {
+            "dimension": {
+                "field": "orders.created_at",
+                "transformations": "year"
+            },
+            "filter_operator": ">",
+            "filter_value": "2002"
+        }
+    ]
+}
+```
+
+### Request Body Description
+- `metrics` (array, optional): An array of objects representing the metrics to be calculated for the data.
+  - `field` (string, required): The field on which the metric will be applied.
+  - `aggregate_operator` (string, optional): The aggregation operator to be used for the metric. Accepted Values:
+    - `sum` - Calculate the sum of the values in the field.
+    - `avg` - Calculate the average of the values in the field.
+    - `count` - Count the number of values in the field.
+    - `max` - Find the maximum value in the field.
+    - `min` - Find the minimum value in the field.
+  - `name` (string, optional): Name you want to be given to this metric.
+
+- `dimensions` (array, optional): An array of objects representing the dimensions to group the data by.
+  - `field` (string, required): The field on which the grouping will be performed.
+  - `transformations` (string, optional): The transformation to be applied to the dimension. Use this to transform the column:
+    - `month` - Convert the datetime field to month.
+    - `year` - Convert the datetime field to year.
+  - `name` (string, optional): Name you want to be given to this Dimension.
+
+- `filters` (array, optional): An array of objects representing the filters to apply on the data.
+  - `dimension` (object, required): The dimension to which the filter will be applied.
+    - same as dimension object
+  - `filter_operator` (string, required): The filter operator. Accepted values : 
+    - `<`
+    - `=` 
+    - `>`
+  - `filter_value` (string, required): The value to be used for filtering.
+
+### Sample Request
+```json
+POST http://localhost:8080/api
+Content-Type: application/json
+
+{
+    "metrics": [
+        {
+            "field": "orders.total",
+            "aggregate_operator": "sum"
+        }
+    ],
+    "dimensions": [
+        {
+            "field": "products.category"
+        },
+        {
+            "field": "orders.created_at",
+            "transformations": "month"
+        }
+    ],
+    "filters": [
+        {
+            "dimension": {
+                "field": "users.state"
+            },
+            "filter_operator": "=",
+            "filter_value": "MN"
+        },
+        {
+            "dimension": {
+                "field": "orders.created_at",
+                "transformations": "year"
+            },
+            "filter_operator": ">",
+            "filter_value": "2002"
+        }
+    ]
+}
+```
+
+### Sample Response
+```json
+{
+    "attributes": [
+        "category",
+        "MONTH(orders.created_at)",
+        "SUM(orders.total)"
+    ],
+    "data": [
+        [
+            "Doohickey",
+            "6",
+            "1577.4069957733154"
+        ],
+        [
+            "Widget",
+            "4",
+            "840.4181995391846"
+        ]
+    ]
+}
+```
+
+### Response Description
+- `attributes` (array): An array of Attributes representing the name of the dimensions & metrics.
+- `data` (array): An array of arrays representing the retrieved data.
+  - Each inner array contains the data for one data point.
+  - The order of elements in the inner array corresponds to the order of dimensions and metrics specified in the request.
+  - Example: The first inner array `[ "1577.4069957733154", "Doohickey", "6" ]` corresponds to the following data points:
+    - Metric 1: "1577.4069957733154" (orders.total)
+    - Dimension 1: "Doohickey" (products.category)
+    - Dimension 2: "6" (orders.created_at, transformed to month)
+
+### Status Codes
+- 200 OK: The request was successful, and the data is returned in the response body.
+- 400 Bad Request: The request is malformed or missing required parameters.
+- 500 Internal Server Error: An error occurred on the server while processing the request.
+
+Please make sure to follow the specified structure while making requests to the API endpoint to retrieve the desired data.
