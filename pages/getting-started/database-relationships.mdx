@@ -1,0 +1,74 @@
+# Database Relationships
+
+After you have interested Frolic with your database, each table in the database is treated as individual entity by default.
+
+In order to establish the relationships between tables, follow the steps below. By establishing the relationships between tables, you can perform complex `/api` queries between tables.
+
+import { Steps } from 'nextra/components'
+ 
+<Steps>
+
+### Connect your database
+
+Ensure that your database connection is setup using [app configurations](/getting-started/app-configurations#database)
+
+### Add Relationships
+
+Inside the `data` folder of your project, create a new file to establish relationships between tables in your database. This file will define how different tables in the database are related to each other. Ensure you provide meaningful relationships to maintain data integrity and facilitate efficient querying.
+
+Example relationship file (`relationships.json`):
+```json
+{
+  "relationships": [
+    {
+        "parent_table": "orders",
+        "child_table": "users",
+        "parent_column": "user_id",
+        "child_column": "id"
+    },
+    {
+        "parent_table": "users",
+        "child_table": "orders",
+        "parent_column": "id",
+        "child_column": "user_id"
+    }
+    // Add more relationships as needed
+  ]
+}
+```
+
+### Run Project
+ 
+Use docker to run Frolic
+
+```
+docker-compose up --build
+```
+
+### Query your Data
+ 
+Send `POST` request to Frolic `/api` to query data from database. Refer to sample request below.
+
+```
+curl --location 'http://localhost/api' \
+--header 'Content-Type: application/json' \
+--data '{
+      "metrics": [
+        {
+          "field": "products.price",
+          "aggregate_operator": "sum"
+        }
+      ],
+      "dimensions": [
+        {
+          "field": "products.category"
+        }
+      ]
+}
+'
+```
+
+Checkout [API documentation](/api-reference) to learn more about API parameters.
+
+
+</Steps>

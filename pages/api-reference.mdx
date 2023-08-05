@@ -1,50 +1,25 @@
-## Base URL
-```
-http://localhost:8080
-```
+## Data API
 
-## Endpoint: POST /api
-This endpoint is used to retrieve data based on specified metrics, dimensions, and filters.
+Frolic provides a single API endpoint at `/api` to query data through a `POST` request.
 
-### Request Body Structure
+An API request has three main parameters: `metrics`, `dimensions`, and `filters` explained below:
+
 ```json
 {
     "metrics": [
-        {
-            "field": "orders.total",
-            "aggregate_operator": "sum",
-        }
+        // Metrics to be fetched from the database
     ],
     "dimensions": [
-        {
-            "field": "products.category"
-        },
-        {
-            "field": "orders.created_at",
-            "transformations": "month"
-        }
+        // The category by which metrics should be categorized
     ],
     "filters": [
-        {
-            "dimension": {
-                "field": "users.state"
-            },
-            "filter_operator": "=",
-            "filter_value": "MN"
-        },
-        {
-            "dimension": {
-                "field": "orders.created_at",
-                "transformations": "year"
-            },
-            "filter_operator": ">",
-            "filter_value": "2002"
-        }
+        // Filters to be applied while fetching data
     ]
 }
 ```
 
-### Request Body Description
+### Request Body Parameters
+
 - `metrics` (array, optional): An array of objects representing the metrics to be calculated for the data.
   - `field` (string, required): The field on which the metric will be applied.
   - `aggregate_operator` (string, optional): The aggregation operator to be used for the metric. Accepted Values:
@@ -57,7 +32,7 @@ This endpoint is used to retrieve data based on specified metrics, dimensions, a
 
 - `dimensions` (array, optional): An array of objects representing the dimensions to group the data by.
   - `field` (string, required): The field on which the grouping will be performed.
-  - `transformations` (string, optional): The transformation to be applied to the dimension. Use this to transform the column:
+  - `transformation` (string, optional): The transformation to be applied to the dimension. Use this to transform the column:
     - `month` - Convert the datetime field to month.
     - `year` - Convert the datetime field to year.
   - `name` (string, optional): Name you want to be given to this Dimension.
@@ -66,17 +41,19 @@ This endpoint is used to retrieve data based on specified metrics, dimensions, a
   - `dimension` (object, required): The dimension to which the filter will be applied.
     - same as dimension object
   - `filter_operator` (string, required): The filter operator. Accepted values : 
-    - `<`
-    - `=` 
-    - `>`
+    - `<` : Less than
+    - `=` : Equals
+    - `>` : Greater Than
   - `filter_value` (string, required): The value to be used for filtering.
 
 ### Sample Request
-```json
-POST http://localhost:8080/api
-Content-Type: application/json
 
-{
+A sample request to API looks like this
+
+```json
+curl --location 'http://localhost/api' \
+--header 'Content-Type: application/json' \
+--data '{
     "metrics": [
         {
             "field": "orders.total",
@@ -89,7 +66,7 @@ Content-Type: application/json
         },
         {
             "field": "orders.created_at",
-            "transformations": "month"
+            "transformation": "month"
         }
     ],
     "filters": [
@@ -103,47 +80,40 @@ Content-Type: application/json
         {
             "dimension": {
                 "field": "orders.created_at",
-                "transformations": "year"
+                "transformation": "year"
             },
             "filter_operator": ">",
             "filter_value": "2002"
         }
     ]
-}
+}'
 ```
 
 ### Sample Response
+
+The response of the API is returned as a list of JSON which contains the values of `dimensions` and `metrics`
+
 ```json
 {
-    "attributes": [
-        "category",
-        "MONTH(orders.created_at)",
-        "SUM(orders.total)"
-    ],
     "data": [
-        [
-            "Doohickey",
-            "6",
-            "1577.4069957733154"
-        ],
-        [
-            "Widget",
-            "4",
-            "840.4181995391846"
-        ]
+        {
+            "products.category": "Doohickey",
+            "orders.total": "1577.4069957733154",
+            "orders.created_at": "6"
+        },
+        {
+            "orders.total": "840.4181995391846",
+            "orders.created_at": "4",
+            "products.category": "Widget"
+        },
+        {
+            "products.category": "Doohickey",
+            "orders.created_at": "5",
+            "orders.total": "822.4914131164551"
+        },
     ]
 }
 ```
-
-### Response Description
-- `attributes` (array): An array of Attributes representing the name of the dimensions & metrics.
-- `data` (array): An array of arrays representing the retrieved data.
-  - Each inner array contains the data for one data point.
-  - The order of elements in the inner array corresponds to the order of dimensions and metrics specified in the request.
-  - Example: The first inner array `[ "1577.4069957733154", "Doohickey", "6" ]` corresponds to the following data points:
-    - Metric 1: "1577.4069957733154" (orders.total)
-    - Dimension 1: "Doohickey" (products.category)
-    - Dimension 2: "6" (orders.created_at, transformed to month)
 
 ### Status Codes
 - 200 OK: The request was successful, and the data is returned in the response body.
@@ -151,3 +121,10 @@ Content-Type: application/json
 - 500 Internal Server Error: An error occurred on the server while processing the request.
 
 Please make sure to follow the specified structure while making requests to the API endpoint to retrieve the desired data.
+
+
+import { Callout } from 'nextra/components'
+ 
+<Callout type="warning" emoji="⚠️">
+  All APIs are cached by default. To disable caching, update the settings in app configuration.
+</Callout>

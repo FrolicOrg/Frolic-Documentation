@@ -1,33 +1,52 @@
 # Getting Started
 
-## Step 1: Setup Your Database Connection
+Follow the steps below to setup Frolic for your dashboard.
 
-Clone the Repository [https://github.com/FrolicOrg/Frolic]
+import { Steps } from 'nextra/components'
+ 
+<Steps>
 
-Now, you'll need to establish a connection to your database. We have a comprehensive guide to assist you in this process. Please refer to our [Database Connection Guide](/getting-started/connect-database) to get your database configured properly.
+### Clone Frolic
 
-## Step 2: Setup Your Database Schema
+```
+git clone https://github.com/frolicorg/frolic.git
+```
+ 
+### Connect your Database
+ 
+Connect your database to Frolic by entering your database configurations in [.env](https://github.com/frolicorg/frolic/blob/prod/app/server/.env) file. Read more about connecting your database to Frolic [here](/getting-started/app-configurations#database).
 
-Once your database connection is established, you need to set up the database schema. This step is crucial to ensure that the project functions correctly. For detailed instructions on setting up the database schema, check out our [Database Schema Setup Guide](/getting-started/schema-database).
+### Run Project
+ 
+Use docker to run Frolic
 
-## Step 3: Setup the Project in Your Local Environment
-
-To set up the project in your local environment : 
-
-1. Use docker to run the database
 ```
 docker-compose up --build
 ```
 
-You can start using the docker container path to query your data.
+### Query your Data
+ 
+Send `POST` request to Frolic `/api` to query data from database. Refer to sample request below.
 
+```
+curl --location 'http://localhost/api' \
+--header 'Content-Type: application/json' \
+--data '{
+      "metrics": [
+        {
+          "field": "products.price",
+          "aggregate_operator": "sum"
+        }
+      ],
+      "dimensions": [
+        {
+          "field": "products.category"
+        }
+      ]
+}
+'
+```
 
-## Step 4: Write Your First Query
+Checkout [API documentation](/api-reference) to learn more about API parameters.
 
-Now that your project and database are set up, it's time to write your first query! Familiarize yourself with our API documentation, which will guide you on how to interact with the project's features and functionalities. You can find the API documentation at [API Documentation](/api-docs).
-
-Congratulations! You've completed all the initial steps, and now you're ready to start building your awesome project using our platform. If you have any questions or run into any issues, don't hesitate to reach out to our support team or community for assistance.
-
-
-
-Happy coding! 🚀
+</Steps>

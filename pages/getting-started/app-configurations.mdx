@@ -1,0 +1,36 @@
+# App Configurations
+
+Frolic backend service can be configured to suit your requirements by updating the following configurations:
+
+
+## Database
+
+To connect Forlic to your database enter your database credentials in `database` section of configuration file:
+
+```
+USER= myusername
+PASSWORD= mypassword
+HOST= localhost
+PORT=3306
+DBNAME= mydatabase
+```
+
+import { Callout } from 'nextra/components'
+
+<Callout emoji="💡">
+  Make sure to keep your `.env` file secure and do not share it publicly, as it contains sensitive information like database passwords.
+
+  If you are deploying the application to a production environment, ensure that the `.env` file is properly configured on the server, and access to it is restricted.
+</Callout>
+
+### Supported Databases
+
+Frolic currently supports the following databases:
+
+* MySQL
+
+We will be adding support for other databases such as `PostgresSQL` and `MongoDB` soon. Checkout our [future roadmap](/future-roadmap) page for more details.
+
+## Caching
+
+Configure Caching

@@ -11,7 +11,7 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/FrolicOrg/Frolic',
   footer: {
-    text: 'Nextra Docs Template',
+    text: 'Frolic',
   },
 }
 
