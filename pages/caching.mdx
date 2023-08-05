@@ -1,9 +1,20 @@
 # Caching
 
-When we need caching?
+Caching is storing data in a location (typically in memory) different than the main data source such that it’s faster to access the data. Like load balancers, caching can be used in various places of the system.
 
-What are the benefits of caching?
+**When we need caching?**
 
-How to configure caching?
+Caching is generally used to keep track of frequent responses to user requests. It can also be used in the case of storing results of long computational operations. 
 
-How caching works in Frolic?
+**What are the benefits of caching?**
+- `User Experience` - using caching we can significantly reduce the response time of our APIs, resulting in better experience for a user
+- `Database Load` - since we are not using database for each and every query we are reducing load on our database
+
+**How to configure caching?**
+
+To configure caching we need to setup a cache server, [memcache](https://memcached.org) in our case. This is the place where we will store all the cached data and use it to retrieve when required.
+Just by setting the caching server and updating the caching details in configuration file you would be able to leverage caching
+
+**How caching works in Frolic?**
+
+Whenever an API request comes, we generate SQL query for that and execute it on the database, also store this query, data pair in the caching server, so that next time the same query is generated we can look for it in the cache server, if found we can send the response directly from there without needing to hit the database.
