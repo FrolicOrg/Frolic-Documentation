@@ -1,36 +1,43 @@
-# App Configurations
+**Configuration File Documentation**
 
-Frolic backend service can be configured to suit your requirements by updating the following configurations:
+Configuration for App are defined in the [config.toml](https://github.com/frolicorg/frolic/blob/prod/app/server/config.toml) file.
+
+**1. Database Configuration:**
+
+The database section of this configuration file is used to specify the parameters for connecting to the database server. It provides the necessary information to establish a connection with the database where your application will store and retrieve data.
+
+| Parameter    | Description                                         | Sample Value                                              |
+|--------------|-----------------------------------------------------|----------------------------------------------------|
+| db_type      | Database you want to connect (Supported : mysql)      | mysql |
+| db_host      | Hostname or IP address of the database server.      | thinkbricks-db.ct00o317q97i.us-east-1.rds.amazonaws.com |
+| db_port      | Port number for communication with the database server. | 3306                                               |
+| db_name      | Name of the database used to store application data. | ecommerce_sample                                   |
+| db_user      | Username for authenticating with the database server. | admin                                              |
+| db_password  | Password associated with the `db_user` account.    | password                                           |
 
 
-## Database
+**2. Caching Configuration:**
 
-To connect Forlic to your database enter your database credentials in `database` section of configuration file:
+Caching is used to temporarily store frequently accessed data in a faster-accessible memory, reducing the need to fetch data from the database repeatedly.
 
-```
-USER= myusername
-PASSWORD= mypassword
-HOST= localhost
-PORT=3306
-DBNAME= mydatabase
-```
+| Parameter     | Description                                           | Default Value       |
+|---------------|-------------------------------------------------------|---------------------|
+| cache_enabled | Enables or disables caching in the application.      | true                |
+| cache_expiry  | Time duration (in seconds) for cached data validity. | 3600 (1 hour)       |
+| cache_type    | Specifies the caching mechanism used (do not edit).                | memcached           |
+| cache_host    | Hostname or IP address of the caching server. (update it as per you server details)        | 127.0.0.1 (local)   |
+| cache_port    | Port number for communication with the caching server. (do not edit - your cache server should be on this port) | 11211             |
 
-import { Callout } from 'nextra/components'
+**3. Schema Parameters:**
 
-<Callout emoji="💡">
-  Make sure to keep your `.env` file secure and do not share it publicly, as it contains sensitive information like database passwords.
+The schema section is related to the application's data schema and how it manages relationships between different database tables.
 
-  If you are deploying the application to a production environment, ensure that the `.env` file is properly configured on the server, and access to it is restricted.
-</Callout>
+| Parameter         | Description                                               | Default Value              |
+|-------------------|-----------------------------------------------------------|----------------------------|
+| fetch_schema      | Controls whether the application should fetch the schema information (you can set it to false once your schema file is generated and update is not required). | true                       |
+| relationship_file | Path to the JSON file containing information about database table relationships (location of the file where your relationships are defined). | data/relationships.json    |
+| schema_file       | Path to the JSON file containing table schema information for the database (do not edit, this file will be auto-generated). | data/table_schema_db.json  |
 
-### Supported Databases
+**Summary:**
 
-Frolic currently supports the following databases:
-
-* MySQL
-
-We will be adding support for other databases such as `PostgresSQL` and `MongoDB` soon. Checkout our [future roadmap](/future-roadmap) page for more details.
-
-## Caching
-
-Configure Caching
+This configuration file is used to set up and configure the database connection, caching mechanism, and schema management for the application. By adjusting the values of the parameters, you can customize how your application interacts with the database and how caching is handled. Be cautious with sensitive information such as database passwords, and ensure that appropriate security measures are taken to protect this file from unauthorized access.
