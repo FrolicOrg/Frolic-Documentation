@@ -14,6 +14,12 @@ An API request has three main parameters: `metrics`, `dimensions`, and `filters`
     ],
     "filters": [
         // Filters to be applied while fetching data
+    ],
+    "orderby": [
+        // The columns on which data needs to be ordered
+    ],
+    "limit":[
+        //Limit the number of rows that needs to be extracted
     ]
 }
 ```
@@ -45,7 +51,10 @@ An API request has three main parameters: `metrics`, `dimensions`, and `filters`
     - `=` : Equals
     - `>` : Greater Than
   - `filter_value` (string, required): The value to be used for filtering.
-
+- `orderby` (object, optional): The column list on which we want the data to be ordered.
+    - `field` (array, required) : An array of String representing the column names on which order needs to be applied
+    - `order` (string, required) : Accepted value `asc` & `desc`, asc is to give ascending order and desc is to give descending order
+- `limit` (integer, optional): This is to limit the number of rows in the output.
 ### Sample Request
 
 A sample request to API looks like this
